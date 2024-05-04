@@ -1,0 +1,11 @@
+# 语言: None, Cpp, Java, JavaScript, ObjC, Proto, TableGen, TextProto
+Language: Cpp
+
+# 基础风格: LLVM, Google, Chromium, Mozilla, WebKit, Microsoft, GNU
+BasedOnStyle: Google
+
+# 缩进宽度
+IndentWidth: 4
+
+# 每行字符的限制，0表示没有限制
+ColumnLimit: 200
