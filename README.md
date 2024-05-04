@@ -13,7 +13,7 @@ An unofficial plugin for DCMTK and implemention JPEG2000 codec via openjpeg.
 Paul Xu <284524239@qq.com>
 
 ## License
-Copyright 2015-2021 Ing-Long Eric Kuo
+Copyright 2024 Paul Xu
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
