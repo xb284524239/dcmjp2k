@@ -2,9 +2,6 @@
 
 An unofficial plugin for DCMTK and implemention JPEG2000 codec via openjpeg.
 
-## Download
-Source https://github.com/DraconPern/fmjpeg2koj
-
 ## Requirements
 - CMake http://www.cmake.org/download/
 
