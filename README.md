@@ -8,3 +8,13 @@ An unofficial plugin for DCMTK and implemention JPEG2000 codec via openjpeg.
 ## Third party dependency
 - DCMTK http://dicom.offis.de/
 - openjpeg http://www.openjpeg.org/
+
+
+## Usage
+- Decode 
+    DCMJP2KDecoderRegistration::registerCodecs();
+    DCMJP2KDecoderRegistration::cleanup();
+
+- Encode
+    DCMJP2KEncoderRegistration::registerCodecs();
+    DCMJP2KEncoderRegistration::cleanup();

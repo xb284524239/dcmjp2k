@@ -24,20 +24,20 @@ set(file_head
 	include/dcmjp2k/memory_file.h
 )
 
-set(file_srcs
-	djcodecd.cc
-	djcodece.cc
-	djcparam.cc
-	djdecode.cc
-	djencode.cc
-	djrparam.cc
-	djutils.cc
-	memory_file.cpp
+set(file_impl
+	src/djcodecd.cc
+	src/djcodece.cc
+	src/djcparam.cc
+	src/djdecode.cc
+	src/djencode.cc
+	src/djrparam.cc
+	src/djutils.cc
+	src/memory_file.cpp
 )
 
-add_library(${PROJECT_NAME} SHARED ${file_head} ${file_srcs})
+add_library(${PROJECT_NAME} SHARED ${file_head} ${file_impl})
 target_compile_definitions(${PROJECT_NAME} PRIVATE -Ddcmjpg2k_EXPORTS)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # OpenJPEG lib
 find_package(OpenJPEG CONFIG REQUIRED)
@@ -60,11 +60,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE DCMTK::DCMTK)
 
  message("DCMTK VERSION is: ${DCMTK_VERSION}")
 
-# ADD_EXECUTABLE(dcmcjp2k dcmcjp2k.cc)
-# TARGET_LINK_LIBRARIES(dcmcjp2k PRIVATE fmjpeg2k)
+# ADD_EXECUTABLE(dcmcjp2k test/dcmcjp2k.cc)
+# TARGET_LINK_LIBRARIES(dcmcjp2k PRIVATE ${PROJECT_NAME})
 
-# ADD_EXECUTABLE(dcmdjp2k dcmdjp2k.cc)
-# TARGET_LINK_LIBRARIES(dcmdjp2k PRIVATE fmjpeg2k)
+# ADD_EXECUTABLE(dcmdjp2k test/dcmdjp2k.cc)
+# TARGET_LINK_LIBRARIES(dcmdjp2k PRIVATE ${PROJECT_NAME})
 
-# ADD_EXECUTABLE(app main.cpp)
+# ADD_EXECUTABLE(app test/main.cpp)
 # TARGET_LINK_LIBRARIES(app PRIVATE ${PROJECT_NAME})

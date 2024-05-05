@@ -1,32 +1,10 @@
-/*
- *
- *  Copyright (C) 2015, Ing-Long Eric Kuo
- *  All rights reserved.  See COPYRIGHT file for details.
- *
- *  This software and supporting documentation were developed by
- *
- *
- *
- *  Module:  fmjpeg2k
- *
- *  Author:  Ing-Long Eric Kuo
- *
- *  Purpose: enumerations, error constants and helper functions for dcmjpls
- *
- */
-
-// #ifndef FMJPEG2K_DJLSUTILS_H
-// #define FMJPEG2K_DJLSUTILS_H
-
 #pragma once
 
-#include "dcmtk/ofstd/ofcond.h"   /* for class OFCondition */
-#include "dcmtk/oflog/oflog.h"
 #include "dcmjp2k/dldefine.h"
-
+#include "dcmtk/oflog/oflog.h"
+#include "dcmtk/ofstd/ofcond.h" /* for class OFCondition */
 
 #define FMJPEG2K_JPEG_VERSION_STRING "fmjpeg2koj - OpenJPEG (unmodified)"
-
 
 // global definitions for logging mechanism provided by the oflog module
 
@@ -34,11 +12,10 @@ extern DCMJP2k_EXPORT OFLogger DCM_fmjp2kLogger;
 
 #define FMJPEG2K_TRACE(msg) OFLOG_TRACE(DCM_fmjp2kLogger, msg)
 #define FMJPEG2K_DEBUG(msg) OFLOG_DEBUG(DCM_fmjp2kLogger, msg)
-#define FMJPEG2K_INFO(msg)  OFLOG_INFO(DCM_fmjp2kLogger, msg)
-#define FMJPEG2K_WARN(msg)  OFLOG_WARN(DCM_fmjp2kLogger, msg)
+#define FMJPEG2K_INFO(msg) OFLOG_INFO(DCM_fmjp2kLogger, msg)
+#define FMJPEG2K_WARN(msg) OFLOG_WARN(DCM_fmjp2kLogger, msg)
 #define FMJPEG2K_ERROR(msg) OFLOG_ERROR(DCM_fmjp2kLogger, msg)
 #define FMJPEG2K_FATAL(msg) OFLOG_FATAL(DCM_fmjp2kLogger, msg)
-
 
 // include this file in doxygen documentation
 
@@ -46,64 +23,59 @@ extern DCMJP2k_EXPORT OFLogger DCM_fmjp2kLogger;
  *  @brief enumerations, error constants and helper functions for the dcmjpls module
  */
 
-
 /** describes the condition under which a compressed or decompressed image
  *  receives a new SOP instance UID.
  */
-enum J2K_UIDCreation
-{
-  /** Upon compression, assign new SOP instance UID if compression is lossy.
-   *  Upon decompression never assign new SOP instance UID.
-   */
-  EJ2KUC_default,
+enum J2K_UIDCreation {
+    /** Upon compression, assign new SOP instance UID if compression is lossy.
+     *  Upon decompression never assign new SOP instance UID.
+     */
+    EJ2KUC_default,
 
-  /// always assign new SOP instance UID on compression and decompression
-  EJ2KUC_always,
+    /// always assign new SOP instance UID on compression and decompression
+    EJ2KUC_always,
 
-  /// never assign new SOP instance UID
-  EJ2KUC_never
+    /// never assign new SOP instance UID
+    EJ2KUC_never
 };
 
 /** describes how the decoder should handle planar configuration of
  *  decompressed color images.
  */
-enum J2K_PlanarConfiguration
-{
-  /// restore planar configuration as indicated in data set
-  EJ2KPC_restore,
+enum J2K_PlanarConfiguration {
+    /// restore planar configuration as indicated in data set
+    EJ2KPC_restore,
 
-  /** automatically determine whether color-by-plane is required from
-   *  the SOP Class UID and decompressed photometric interpretation
-   */
-  EJ2KPC_auto,
+    /** automatically determine whether color-by-plane is required from
+     *  the SOP Class UID and decompressed photometric interpretation
+     */
+    EJ2KPC_auto,
 
-  /// always create color-by-pixel planar configuration
-  EJ2KPC_colorByPixel,
+    /// always create color-by-pixel planar configuration
+    EJ2KPC_colorByPixel,
 
-  /// always create color-by-plane planar configuration
-  EJ2KPC_colorByPlane
+    /// always create color-by-plane planar configuration
+    EJ2KPC_colorByPlane
 };
 
 /** describes how the encoder handles the image bit depth
  *  upon lossy compression.
  */
-enum J2K_CompressionBitDepth
-{
-  /// keep original bit depth
-  EJ2KBD_original,
+enum J2K_CompressionBitDepth {
+    /// keep original bit depth
+    EJ2KBD_original,
 
-  /** limit bit depth to a certain value, i.e. scale down
-   *  if the original image bit depth is larger
-   */
-  EJ2KBD_limit,
+    /** limit bit depth to a certain value, i.e. scale down
+     *  if the original image bit depth is larger
+     */
+    EJ2KBD_limit,
 
-  /** force bit depth to a certain value, i.e. scale up
-   *  or scale down the original image to match the given
-   *  bit depth.
-   */
-  EJ2KBD_force
+    /** force bit depth to a certain value, i.e. scale up
+     *  or scale down the original image to match the given
+     *  bit depth.
+     */
+    EJ2KBD_force
 };
-
 
 // CONDITION CONSTANTS
 
@@ -151,5 +123,3 @@ extern DCMJP2k_EXPORT const OFConditionConst EC_J2KUnsupportedImageType;
 
 /// error condition constant: Trailing data after image
 extern DCMJP2k_EXPORT const OFConditionConst EC_J2KTooMuchCompressedData;
-
-// #endif
