@@ -4,7 +4,7 @@ An unofficial plugin for DCMTK and implemention JPEG2000 codec via openjpeg.
 
 
 ## Requirements
-- CMake http://www.cmake.org/download/
+- CMake https://cmake.org/
 - Vcpkg https://github.com/microsoft/vcpkg
 
 
