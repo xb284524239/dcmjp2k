@@ -5,7 +5,7 @@
 
 /** codec parameter for JPEG-2000 codecs
  */
-class DCMJP2k_EXPORT DJPEG2KCodecParameter : public DcmCodecParameter {
+class DCMJP2K_EXPORT DcmJp2kCodecParameter : public DcmCodecParameter {
    public:
     /** constructor, for use with encoders.
      *  @param jp2k_optionsEnabled       enable/disable use of all JPEG-2000 parameters
@@ -19,7 +19,7 @@ class DCMJP2k_EXPORT DJPEG2KCodecParameter : public DcmCodecParameter {
      *  @param planarConfiguration       flag describing how planar configuration of decompressed color images should be handled
      *  @param ignoreOffsetTable         flag indicating whether to ignore the offset table when decompressing multiframe images
      */
-    DJPEG2KCodecParameter(OFBool jp2k_optionsEnabled, Uint16 jp2k_cblkwidth = 64, Uint16 jp2k_cblkheight = 64, OFBool preferCookedEncoding = OFTrue, Uint32 fragmentSize = 0,
+    DcmJp2kCodecParameter(OFBool jp2k_optionsEnabled, Uint16 jp2k_cblkwidth = 64, Uint16 jp2k_cblkheight = 64, OFBool preferCookedEncoding = OFTrue, Uint32 fragmentSize = 0,
                           OFBool createOffsetTable = OFTrue, J2K_UIDCreation uidCreation = EJ2KUC_default, OFBool convertToSC = OFFalse, J2K_PlanarConfiguration planarConfiguration = EJ2KPC_restore,
                           OFBool ignoreOffsetTable = OFFalse);
 
@@ -28,13 +28,13 @@ class DCMJP2k_EXPORT DJPEG2KCodecParameter : public DcmCodecParameter {
      *  @param planarConfiguration       flag describing how planar configuration of decompressed color images should be handled
      *  @param ignoreOffsetTable         flag indicating whether to ignore the offset table when decompressing multiframe images
      */
-    DJPEG2KCodecParameter(J2K_UIDCreation uidCreation = EJ2KUC_default, J2K_PlanarConfiguration planarConfiguration = EJ2KPC_restore, OFBool ignoreOffsetTable = OFFalse);
+    DcmJp2kCodecParameter(J2K_UIDCreation uidCreation = EJ2KUC_default, J2K_PlanarConfiguration planarConfiguration = EJ2KPC_restore, OFBool ignoreOffsetTable = OFFalse);
 
     /// copy constructor
-    DJPEG2KCodecParameter(const DJPEG2KCodecParameter& arg);
+    DcmJp2kCodecParameter(const DcmJp2kCodecParameter& arg);
 
     /// destructor
-    virtual ~DJPEG2KCodecParameter();
+    virtual ~DcmJp2kCodecParameter();
 
     /** this methods creates a copy of type DcmCodecParameter *
      *  it must be overweritten in every subclass.
@@ -100,7 +100,7 @@ class DCMJP2k_EXPORT DJPEG2KCodecParameter : public DcmCodecParameter {
 
    private:
     /// private undefined copy assignment operator
-    DJPEG2KCodecParameter& operator=(const DJPEG2KCodecParameter&);
+    DcmJp2kCodecParameter& operator=(const DcmJp2kCodecParameter&);
 
     // ****************************************************
     // **** Parameters describing the encoding process ****

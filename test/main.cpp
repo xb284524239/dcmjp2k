@@ -27,7 +27,7 @@ std::string toString(E_TransferSyntax syntax) {
 int main(int argc, char *argv[]) {
     const char *filename2 = R"(C:\Users\paul\Downloads\DICOM\self_pacs\1.2.840.113619.2.80.3009249241.158823.1651195780.2.DCM)";  // JPEG 2000 (Lossless only)
 
-    DCMJP2KDecoderRegistration::registerCodecs();
+    DcmJp2kDecoderRegistration::registerCodecs();
 
     DcmFileFormat format;
     std::cout << "reading input file is: " << filename2 << std::endl;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Can Write To New Transfer Syntax: " << std::boolalpha << can << std::endl;
     }
     // deregister global decompression codecs
-    DCMJP2KDecoderRegistration::cleanup();
+    DcmJp2kDecoderRegistration::cleanup();
 
     return 0;
 }

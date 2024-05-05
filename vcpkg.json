@@ -1,6 +1,6 @@
 {
     "name": "dcmjp2k",
-    "version": "1.0.0",
+    "version": "1.0.5",
     "port-version": 1,
     "description": "An unofficial plugin for DCMTK and implemention JPEG2000 codec via openjpeg.",
     "homepage": "https://github.com/xb284524239/dcmjp2k",

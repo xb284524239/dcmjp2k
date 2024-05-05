@@ -1,23 +1,23 @@
 #include "dcmjp2k/djrparam.h"
 
-FMJPEG2KRepresentationParameter::FMJPEG2KRepresentationParameter(Uint16 nearlosslessPSNR, OFBool losslessProcess)
+DcmJp2kRepresentationParameter::DcmJp2kRepresentationParameter(Uint16 nearlosslessPSNR, OFBool losslessProcess)
     : DcmRepresentationParameter(), nearlosslessPSNR_(nearlosslessPSNR), losslessProcess_(losslessProcess) {}
 
-FMJPEG2KRepresentationParameter::FMJPEG2KRepresentationParameter(const FMJPEG2KRepresentationParameter &arg)
+DcmJp2kRepresentationParameter::DcmJp2kRepresentationParameter(const DcmJp2kRepresentationParameter &arg)
     : DcmRepresentationParameter(arg), nearlosslessPSNR_(arg.nearlosslessPSNR_), losslessProcess_(arg.losslessProcess_) {}
 
-FMJPEG2KRepresentationParameter::~FMJPEG2KRepresentationParameter() {}
+DcmJp2kRepresentationParameter::~DcmJp2kRepresentationParameter() {}
 
-DcmRepresentationParameter *FMJPEG2KRepresentationParameter::clone() const { return new FMJPEG2KRepresentationParameter(*this); }
+DcmRepresentationParameter *DcmJp2kRepresentationParameter::clone() const { return new DcmJp2kRepresentationParameter(*this); }
 
-const char *FMJPEG2KRepresentationParameter::className() const { return "FMJP2KRepresentationParameter"; }
+const char *DcmJp2kRepresentationParameter::className() const { return "FMJP2KRepresentationParameter"; }
 
-OFBool FMJPEG2KRepresentationParameter::operator==(const DcmRepresentationParameter &arg) const {
+OFBool DcmJp2kRepresentationParameter::operator==(const DcmRepresentationParameter &arg) const {
     const char *argname = arg.className();
     if (argname) {
         OFString argstring(argname);
         if (argstring == className()) {
-            const FMJPEG2KRepresentationParameter &argll = OFreinterpret_cast(const FMJPEG2KRepresentationParameter &, arg);
+            const DcmJp2kRepresentationParameter &argll = OFreinterpret_cast(const DcmJp2kRepresentationParameter &, arg);
             if (losslessProcess_ && argll.losslessProcess_)
                 return OFTrue;
             else if (losslessProcess_ != argll.losslessProcess_)

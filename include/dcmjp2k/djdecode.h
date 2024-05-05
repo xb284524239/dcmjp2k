@@ -3,12 +3,12 @@
 #include "dcmjp2k/djlsutil.h"    /* for enums */
 #include "dcmtk/ofstd/oftypes.h" /* for OFBool */
 
-class DJPEG2KCodecParameter;
-class DJPEG2KDecoder;
+class DcmJp2kCodecParameter;
+class DcmJp2kDecoder;
 
 /** singleton class that registers decoders for all supported JPEG 2000 processes.
  */
-class DCMJP2k_EXPORT DCMJP2kDecoderRegistration {
+class DCMJP2K_EXPORT DcmJp2kDecoderRegistration {
    public:
     /** registers decoder for all supported JPEG-LS processes.
      *  If already registered, call is ignored unless cleanup() has
@@ -39,8 +39,8 @@ class DCMJP2k_EXPORT DCMJP2kDecoderRegistration {
     static OFBool registered_;
 
     /// pointer to codec parameter shared by all decoders
-    static DJPEG2KCodecParameter *cp_;
+    static DcmJp2kCodecParameter *cp_;
 
     /// pointer to decoder
-    static DJPEG2KDecoder *decoder_;
+    static DcmJp2kDecoder *decoder_;
 };

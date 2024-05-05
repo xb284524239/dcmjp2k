@@ -15,11 +15,11 @@
 #include "dcmjp2k/memory_file.h"
 #include "openjpeg.h"
 
-DJPEG2KDecoderBase::DJPEG2KDecoderBase() : DcmCodec() {}
+DcmJp2kDecoderBase::DcmJp2kDecoderBase() : DcmCodec() {}
 
-DJPEG2KDecoderBase::~DJPEG2KDecoderBase() {}
+DcmJp2kDecoderBase::~DcmJp2kDecoderBase() {}
 
-OFBool DJPEG2KDecoderBase::canChangeCoding(const E_TransferSyntax oldRepType, const E_TransferSyntax newRepType) const {
+OFBool DcmJp2kDecoderBase::canChangeCoding(const E_TransferSyntax oldRepType, const E_TransferSyntax newRepType) const {
     // this codec only handles conversion from JPEG-2000 to uncompressed.
 
     DcmXfer newRep(newRepType);
@@ -30,7 +30,7 @@ OFBool DJPEG2KDecoderBase::canChangeCoding(const E_TransferSyntax oldRepType, co
     return OFFalse;
 }
 
-OFCondition DJPEG2KDecoderBase::decode(const DcmRepresentationParameter * /* fromRepParam */, DcmPixelSequence *pixSeq, DcmPolymorphOBOW &uncompressedPixelData, const DcmCodecParameter *cp,
+OFCondition DcmJp2kDecoderBase::decode(const DcmRepresentationParameter * /* fromRepParam */, DcmPixelSequence *pixSeq, DcmPolymorphOBOW &uncompressedPixelData, const DcmCodecParameter *cp,
                                        const DcmStack &objStack) const {
     // retrieve pointer to dataset from parameter stack
     DcmStack localStack(objStack);
@@ -88,7 +88,7 @@ OFCondition DJPEG2KDecoderBase::decode(const DcmRepresentationParameter * /* fro
     if (totalSize & 1) totalSize++;  // align on 16-bit word boundary
 
     // assume we can cast the codec parameter to what we need
-    const DJPEG2KCodecParameter *djcp = OFreinterpret_cast(const DJPEG2KCodecParameter *, cp);
+    const DcmJp2kCodecParameter *djcp = OFreinterpret_cast(const DcmJp2kCodecParameter *, cp);
 
     // determine planar configuration for uncompressed data
     OFString imageSopClass;
@@ -107,7 +107,7 @@ OFCondition DJPEG2KDecoderBase::decode(const DcmRepresentationParameter * /* fro
     OFBool done = OFFalse;
 
     while (result.good() && !done) {
-        FMJPEG2K_DEBUG("JPEG-2000 decoder processes frame " << (currentFrame + 1));
+        DCMJP2K_DEBUG("JPEG-2000 decoder processes frame " << (currentFrame + 1));
 
         result = decodeFrame(pixSeq, djcp, dataset, currentFrame, currentItem, pixeldata8, frameSize, imageFrames, imageColumns, imageRows, imageSamplesPerPixel, bytesPerSample);
 
@@ -139,18 +139,18 @@ OFCondition DJPEG2KDecoderBase::decode(const DcmRepresentationParameter * /* fro
     return result;
 }
 
-OFCondition DJPEG2KDecoderBase::decode(const DcmRepresentationParameter *fromRepParam, DcmPixelSequence *pixSeq, DcmPolymorphOBOW &uncompressedPixelData, const DcmCodecParameter *cp,
+OFCondition DcmJp2kDecoderBase::decode(const DcmRepresentationParameter *fromRepParam, DcmPixelSequence *pixSeq, DcmPolymorphOBOW &uncompressedPixelData, const DcmCodecParameter *cp,
                                        const DcmStack &objStack, OFBool &removeOldRep) const {
     // removeOldRep is left as it is, pixel data in original DICOM dataset is not modified
     return decode(fromRepParam, pixSeq, uncompressedPixelData, cp, objStack);
 }
 
-OFCondition DJPEG2KDecoderBase::decodeFrame(const DcmRepresentationParameter * /* fromParam */, DcmPixelSequence *fromPixSeq, const DcmCodecParameter *cp, DcmItem *dataset, Uint32 frameNo,
+OFCondition DcmJp2kDecoderBase::decodeFrame(const DcmRepresentationParameter * /* fromParam */, DcmPixelSequence *fromPixSeq, const DcmCodecParameter *cp, DcmItem *dataset, Uint32 frameNo,
                                             Uint32 &currentItem, void *buffer, Uint32 bufSize, OFString &decompressedColorModel) const {
     OFCondition result = EC_Normal;
 
     // assume we can cast the codec parameter to what we need
-    const DJPEG2KCodecParameter *djcp = OFreinterpret_cast(const DJPEG2KCodecParameter *, cp);
+    const DcmJp2kCodecParameter *djcp = OFreinterpret_cast(const DcmJp2kCodecParameter *, cp);
 
     // determine properties of uncompressed dataset
     Uint16 imageSamplesPerPixel = 0;
@@ -197,7 +197,7 @@ OFCondition DJPEG2KDecoderBase::decodeFrame(const DcmRepresentationParameter * /
 
     if (result.good()) {
         // We got all the data we need from the dataset, let's start decoding
-        FMJPEG2K_DEBUG("Starting to decode frame " << frameNo << " with fragment " << currentItem);
+        DCMJP2K_DEBUG("Starting to decode frame " << frameNo << " with fragment " << currentItem);
         result = decodeFrame(fromPixSeq, djcp, dataset, frameNo, currentItem, buffer, bufSize, imageFrames, imageColumns, imageRows, imageSamplesPerPixel, bytesPerSample);
     }
 
@@ -217,7 +217,7 @@ OFCondition copyRGBUint8ToRGBUint8(opj_image_t *image, Uint8 *imageFrame, Uint16
 
 OFCondition copyRGBUint8ToRGBUint8Planar(opj_image_t *image, Uint8 *imageFrame, Uint16 columns, Uint16 rows);
 
-OFCondition DJPEG2KDecoderBase::decodeFrame(DcmPixelSequence *fromPixSeq, const DJPEG2KCodecParameter *cp, DcmItem *dataset, Uint32 frameNo, Uint32 &currentItem, void *buffer, Uint32 bufSize,
+OFCondition DcmJp2kDecoderBase::decodeFrame(DcmPixelSequence *fromPixSeq, const DcmJp2kCodecParameter *cp, DcmItem *dataset, Uint32 frameNo, Uint32 &currentItem, void *buffer, Uint32 bufSize,
                                             Sint32 imageFrames, Uint16 imageColumns, Uint16 imageRows, Uint16 imageSamplesPerPixel, Uint16 bytesPerSample) {
     DcmPixelItem *pixItem = NULL;
     Uint8 *jlsData = NULL;
@@ -407,29 +407,29 @@ OFCondition DJPEG2KDecoderBase::decodeFrame(DcmPixelSequence *fromPixSeq, const 
     return result;
 }
 
-OFCondition DJPEG2KDecoderBase::encode(const Uint16 * /* pixelData */, const Uint32 /* length */, const DcmRepresentationParameter * /* toRepParam */, DcmPixelSequence *& /* pixSeq */,
+OFCondition DcmJp2kDecoderBase::encode(const Uint16 * /* pixelData */, const Uint32 /* length */, const DcmRepresentationParameter * /* toRepParam */, DcmPixelSequence *& /* pixSeq */,
                                        const DcmCodecParameter * /* cp */, DcmStack & /* objStack */) const {
     // we are a decoder only
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KDecoderBase::encode(const Uint16 *pixelData, const Uint32 length, const DcmRepresentationParameter *toRepParam, DcmPixelSequence *&pixSeq, const DcmCodecParameter *cp,
+OFCondition DcmJp2kDecoderBase::encode(const Uint16 *pixelData, const Uint32 length, const DcmRepresentationParameter *toRepParam, DcmPixelSequence *&pixSeq, const DcmCodecParameter *cp,
                                        DcmStack &objStack, OFBool &removeOldRep) const {
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KDecoderBase::encode(const E_TransferSyntax /* fromRepType */, const DcmRepresentationParameter * /* fromRepParam */, DcmPixelSequence * /* fromPixSeq */,
+OFCondition DcmJp2kDecoderBase::encode(const E_TransferSyntax /* fromRepType */, const DcmRepresentationParameter * /* fromRepParam */, DcmPixelSequence * /* fromPixSeq */,
                                        const DcmRepresentationParameter * /* toRepParam */, DcmPixelSequence *& /* toPixSeq */, const DcmCodecParameter * /* cp */, DcmStack & /* objStack */) const {
     // we don't support re-coding for now.
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KDecoderBase::encode(const E_TransferSyntax fromRepType, const DcmRepresentationParameter *fromRepParam, DcmPixelSequence *fromPixSeq, const DcmRepresentationParameter *toRepParam,
+OFCondition DcmJp2kDecoderBase::encode(const E_TransferSyntax fromRepType, const DcmRepresentationParameter *fromRepParam, DcmPixelSequence *fromPixSeq, const DcmRepresentationParameter *toRepParam,
                                        DcmPixelSequence *&toPixSeq, const DcmCodecParameter *cp, DcmStack &objStack, OFBool &removeOldRep) const {
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KDecoderBase::determineDecompressedColorModel(const DcmRepresentationParameter * /* fromParam */, DcmPixelSequence * /* fromPixSeq */, const DcmCodecParameter * /* cp */,
+OFCondition DcmJp2kDecoderBase::determineDecompressedColorModel(const DcmRepresentationParameter * /* fromParam */, DcmPixelSequence * /* fromPixSeq */, const DcmCodecParameter * /* cp */,
                                                                 DcmItem *dataset, OFString &decompressedColorModel) const {
     OFCondition result = EC_IllegalParameter;
     if (dataset != NULL) {
@@ -439,7 +439,7 @@ OFCondition DJPEG2KDecoderBase::determineDecompressedColorModel(const DcmReprese
     return result;
 }
 
-Uint16 DJPEG2KDecoderBase::determinePlanarConfiguration(const OFString &sopClassUID, const OFString &photometricInterpretation) {
+Uint16 DcmJp2kDecoderBase::determinePlanarConfiguration(const OFString &sopClassUID, const OFString &photometricInterpretation) {
     // Hardcopy Color Image always requires color-by-plane
     if (sopClassUID == UID_RETIRED_HardcopyColorImageStorage) return 1;
 
@@ -452,7 +452,7 @@ Uint16 DJPEG2KDecoderBase::determinePlanarConfiguration(const OFString &sopClass
     return 0;
 }
 
-Uint32 DJPEG2KDecoderBase::computeNumberOfFragments(Sint32 numberOfFrames, Uint32 currentFrame, Uint32 startItem, OFBool ignoreOffsetTable, DcmPixelSequence *pixSeq) {
+Uint32 DcmJp2kDecoderBase::computeNumberOfFragments(Sint32 numberOfFrames, Uint32 currentFrame, Uint32 startItem, OFBool ignoreOffsetTable, DcmPixelSequence *pixSeq) {
     unsigned long numItems = pixSeq->card();
     DcmPixelItem *pixItem = NULL;
 
@@ -536,7 +536,7 @@ Uint32 DJPEG2KDecoderBase::computeNumberOfFragments(Sint32 numberOfFrames, Uint3
     return 0;
 }
 
-OFBool DJPEG2KDecoderBase::isJPEGLSStartOfImage(Uint8 *fragmentData) {
+OFBool DcmJp2kDecoderBase::isJPEGLSStartOfImage(Uint8 *fragmentData) {
     // A valid JPEG-2000 bitstream will always start with an SOI marker FFD8, followed
     // by either an SOF55 (FFF7), COM (FFFE) or APPn (FFE0-FFEF) marker.
     if ((*fragmentData++) != 0xFF) return OFFalse;
@@ -548,7 +548,7 @@ OFBool DJPEG2KDecoderBase::isJPEGLSStartOfImage(Uint8 *fragmentData) {
     return OFFalse;
 }
 
-OFCondition DJPEG2KDecoderBase::createPlanarConfiguration1Byte(Uint8 *imageFrame, Uint16 columns, Uint16 rows) {
+OFCondition DcmJp2kDecoderBase::createPlanarConfiguration1Byte(Uint8 *imageFrame, Uint16 columns, Uint16 rows) {
     if (imageFrame == NULL) return EC_IllegalCall;
 
     unsigned long numPixels = columns * rows;
@@ -572,7 +572,7 @@ OFCondition DJPEG2KDecoderBase::createPlanarConfiguration1Byte(Uint8 *imageFrame
     return EC_Normal;
 }
 
-OFCondition DJPEG2KDecoderBase::createPlanarConfiguration1Word(Uint16 *imageFrame, Uint16 columns, Uint16 rows) {
+OFCondition DcmJp2kDecoderBase::createPlanarConfiguration1Word(Uint16 *imageFrame, Uint16 columns, Uint16 rows) {
     if (imageFrame == NULL) return EC_IllegalCall;
 
     unsigned long numPixels = columns * rows;
@@ -596,7 +596,7 @@ OFCondition DJPEG2KDecoderBase::createPlanarConfiguration1Word(Uint16 *imageFram
     return EC_Normal;
 }
 
-OFCondition DJPEG2KDecoderBase::createPlanarConfiguration0Byte(Uint8 *imageFrame, Uint16 columns, Uint16 rows) {
+OFCondition DcmJp2kDecoderBase::createPlanarConfiguration0Byte(Uint8 *imageFrame, Uint16 columns, Uint16 rows) {
     if (imageFrame == NULL) return EC_IllegalCall;
 
     unsigned long numPixels = columns * rows;
@@ -620,7 +620,7 @@ OFCondition DJPEG2KDecoderBase::createPlanarConfiguration0Byte(Uint8 *imageFrame
     return EC_Normal;
 }
 
-OFCondition DJPEG2KDecoderBase::createPlanarConfiguration0Word(Uint16 *imageFrame, Uint16 columns, Uint16 rows) {
+OFCondition DcmJp2kDecoderBase::createPlanarConfiguration0Word(Uint16 *imageFrame, Uint16 columns, Uint16 rows) {
     if (imageFrame == NULL) return EC_IllegalCall;
 
     unsigned long numPixels = columns * rows;

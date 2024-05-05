@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.29.0)
 
 include("C:/CXXThirdParty/vcpkg/scripts/buildsystems/vcpkg.cmake") # 导入 vcpkg 工具链
 
-project(dcmjp2k VERSION 1.0.0 LANGUAGES C CXX)
+project(dcmjp2k VERSION 1.0.5 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -35,8 +35,8 @@ set(file_impl
 	src/memory_file.cpp
 )
 
-add_library(${PROJECT_NAME} SHARED ${file_head} ${file_impl})
-target_compile_definitions(${PROJECT_NAME} PRIVATE -Ddcmjpg2k_EXPORTS)
+add_library(${PROJECT_NAME} ${file_head} ${file_impl})
+target_compile_definitions(${PROJECT_NAME} PRIVATE -Ddcmjp2k_EXPORTS)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # OpenJPEG lib
@@ -52,13 +52,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE DCMTK::DCMTK)
      target_compile_definitions(${PROJECT_NAME}
          PRIVATE
              "DCMTK_PREFIX=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-             "DCM_DICT_DEFAULT_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/dicom.dic:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-3.6.8/private.dic"
+             "DCM_DICT_DEFAULT_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/dicom.dic:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/private.dic"
              "DEFAULT_CONFIGURATION_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/etc/dcmtk-${DCMTK_VERSION}/"
              "DEFAULT_SUPPORT_DATA_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/"
      )
  endif()
-
- message("DCMTK VERSION is: ${DCMTK_VERSION}")
 
 # ADD_EXECUTABLE(dcmcjp2k test/dcmcjp2k.cc)
 # TARGET_LINK_LIBRARIES(dcmcjp2k PRIVATE ${PROJECT_NAME})

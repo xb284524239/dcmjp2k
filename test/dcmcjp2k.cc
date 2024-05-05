@@ -27,7 +27,7 @@
 #define OFFIS_CONSOLE_APPLICATION "fmcjp2k"
 #endif
 
-static OFLogger fmjp2kLogger = OFLog::getLogger(OFFIS_CONSOLE_APPLICATION);
+static OFLogger dcmjp2kEncodeLogger = OFLog::getLogger(OFFIS_CONSOLE_APPLICATION);
 
 static char rcsid[] = "$dcmtk: " OFFIS_CONSOLE_APPLICATION " v" OFFIS_DCMTK_VERSION " " OFFIS_DCMTK_RELEASEDATE " $";
 
@@ -160,7 +160,7 @@ int main(int argc, char *argv[]) {
             if (cmd.findOption("--version")) {
                 app.printHeader(OFTrue /*print host identifier*/);
                 COUT << OFendl << "External libraries used:" << OFendl;
-                COUT << "- " << DCMJP2KEncoderRegistration::getLibraryVersionString() << OFendl;
+                COUT << "- " << DcmJp2kEncoderRegistration::getLibraryVersionString() << OFendl;
                 return 0;
             }
         }
@@ -306,38 +306,38 @@ int main(int argc, char *argv[]) {
     }
 
     /* print resource identifier */
-    OFLOG_DEBUG(fmjp2kLogger, rcsid << OFendl);
+    OFLOG_DEBUG(dcmjp2kEncodeLogger, rcsid << OFendl);
 
     // register global compression codecs
-    DCMJP2KEncoderRegistration::registerCodecs(opt_use_custom_options, OFstatic_cast(Uint16, opt_cblkwidth), OFstatic_cast(Uint16, opt_cblkheight), opt_prefer_cooked, opt_fragmentSize,
+    DcmJp2kEncoderRegistration::registerCodecs(opt_use_custom_options, OFstatic_cast(Uint16, opt_cblkwidth), OFstatic_cast(Uint16, opt_cblkheight), opt_prefer_cooked, opt_fragmentSize,
                                                opt_createOffsetTable, opt_uidcreation, opt_secondarycapture);
 
     /* make sure data dictionary is loaded */
     if (!dcmDataDict.isDictionaryLoaded()) {
-        OFLOG_WARN(fmjp2kLogger, "no data dictionary loaded, " << "check environment variable: " << DCM_DICT_ENVIRONMENT_VARIABLE);
+        OFLOG_WARN(dcmjp2kEncodeLogger, "no data dictionary loaded, " << "check environment variable: " << DCM_DICT_ENVIRONMENT_VARIABLE);
     }
 
     // open inputfile
     if ((opt_ifname == NULL) || (strlen(opt_ifname) == 0)) {
-        OFLOG_FATAL(fmjp2kLogger, "invalid filename: <empty string>");
+        OFLOG_FATAL(dcmjp2kEncodeLogger, "invalid filename: <empty string>");
         return 1;
     }
 
-    OFLOG_INFO(fmjp2kLogger, "reading input file " << opt_ifname);
+    OFLOG_INFO(dcmjp2kEncodeLogger, "reading input file " << opt_ifname);
 
     DcmFileFormat fileformat;
     OFCondition error = fileformat.loadFile(opt_ifname, opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode);
     if (error.bad()) {
-        OFLOG_FATAL(fmjp2kLogger, error.text() << ": reading file: " << opt_ifname);
+        OFLOG_FATAL(dcmjp2kEncodeLogger, error.text() << ": reading file: " << opt_ifname);
         return 1;
     }
     DcmDataset *dataset = fileformat.getDataset();
 
     DcmXfer original_xfer(dataset->getOriginalXfer());
     if (original_xfer.isEncapsulated()) {
-        OFLOG_INFO(fmjp2kLogger, "DICOM file is already compressed, converting to uncompressed transfer syntax first");
+        OFLOG_INFO(dcmjp2kEncodeLogger, "DICOM file is already compressed, converting to uncompressed transfer syntax first");
         if (EC_Normal != dataset->chooseRepresentation(EXS_LittleEndianExplicit, NULL)) {
-            OFLOG_FATAL(fmjp2kLogger, "No conversion from compressed original to uncompressed transfer syntax possible!");
+            OFLOG_FATAL(dcmjp2kEncodeLogger, "No conversion from compressed original to uncompressed transfer syntax possible!");
             return 1;
         }
     }
@@ -346,44 +346,44 @@ int main(int argc, char *argv[]) {
     if (fileformat.getMetaInfo()->findAndGetOFString(DCM_MediaStorageSOPClassUID, sopClass).good()) {
         /* check for DICOMDIR files */
         if (sopClass == UID_MediaStorageDirectoryStorage) {
-            OFLOG_FATAL(fmjp2kLogger, "DICOMDIR files (Media Storage Directory Storage SOP Class) cannot be compressed!");
+            OFLOG_FATAL(dcmjp2kEncodeLogger, "DICOMDIR files (Media Storage Directory Storage SOP Class) cannot be compressed!");
             return 1;
         }
     }
 
-    OFLOG_INFO(fmjp2kLogger, "Convert DICOM file to compressed transfer syntax");
+    OFLOG_INFO(dcmjp2kEncodeLogger, "Convert DICOM file to compressed transfer syntax");
 
     // create representation parameter
-    FMJPEG2KRepresentationParameter rp(OFstatic_cast(Uint16, opt_nearlossless_psnr), opt_useLosslessProcess);
+    DcmJp2kRepresentationParameter rp(OFstatic_cast(Uint16, opt_nearlossless_psnr), opt_useLosslessProcess);
     DcmXfer opt_oxferSyn(opt_oxfer);
 
     // perform decoding process
     OFCondition result = dataset->chooseRepresentation(opt_oxfer, &rp);
     if (result.bad()) {
-        OFLOG_FATAL(fmjp2kLogger, result.text() << ": encoding file: " << opt_ifname);
+        OFLOG_FATAL(dcmjp2kEncodeLogger, result.text() << ": encoding file: " << opt_ifname);
         return 1;
     }
     if (dataset->canWriteXfer(opt_oxfer)) {
-        OFLOG_INFO(fmjp2kLogger, "Output transfer syntax " << opt_oxferSyn.getXferName() << " can be written");
+        OFLOG_INFO(dcmjp2kEncodeLogger, "Output transfer syntax " << opt_oxferSyn.getXferName() << " can be written");
     } else {
-        OFLOG_FATAL(fmjp2kLogger, "No conversion to transfer syntax " << opt_oxferSyn.getXferName() << " possible!");
+        OFLOG_FATAL(dcmjp2kEncodeLogger, "No conversion to transfer syntax " << opt_oxferSyn.getXferName() << " possible!");
         return 1;
     }
 
-    OFLOG_INFO(fmjp2kLogger, "creating output file " << opt_ofname);
+    OFLOG_INFO(dcmjp2kEncodeLogger, "creating output file " << opt_ofname);
 
     fileformat.loadAllDataIntoMemory();
     error = fileformat.saveFile(opt_ofname, opt_oxfer, opt_oenctype, opt_oglenc, opt_opadenc, OFstatic_cast(Uint32, opt_filepad), OFstatic_cast(Uint32, opt_itempad), EWM_updateMeta);
 
     if (error.bad()) {
-        OFLOG_FATAL(fmjp2kLogger, error.text() << ": writing file: " << opt_ofname);
+        OFLOG_FATAL(dcmjp2kEncodeLogger, error.text() << ": writing file: " << opt_ofname);
         return 1;
     }
 
-    OFLOG_INFO(fmjp2kLogger, "conversion successful");
+    OFLOG_INFO(dcmjp2kEncodeLogger, "conversion successful");
 
     // deregister global codecs
-    DCMJP2KEncoderRegistration::cleanup();
+    DcmJp2kEncoderRegistration::cleanup();
 
     return 0;
 }

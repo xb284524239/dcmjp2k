@@ -1,6 +1,6 @@
 #include "dcmjp2k/djcparam.h"
 
-DJPEG2KCodecParameter::DJPEG2KCodecParameter(OFBool jp2k_optionsEnabled, Uint16 jp2k_cblkwidth, Uint16 jp2k_cblkheight, OFBool preferCookedEncoding, Uint32 fragmentSize, OFBool createOffsetTable,
+DcmJp2kCodecParameter::DcmJp2kCodecParameter(OFBool jp2k_optionsEnabled, Uint16 jp2k_cblkwidth, Uint16 jp2k_cblkheight, OFBool preferCookedEncoding, Uint32 fragmentSize, OFBool createOffsetTable,
                                              J2K_UIDCreation uidCreation, OFBool convertToSC, J2K_PlanarConfiguration planarConfiguration, OFBool ignoreOffsetTble)
     : DcmCodecParameter(),
       jp2k_optionsEnabled_(jp2k_optionsEnabled),
@@ -14,7 +14,7 @@ DJPEG2KCodecParameter::DJPEG2KCodecParameter(OFBool jp2k_optionsEnabled, Uint16 
       planarConfiguration_(planarConfiguration),
       ignoreOffsetTable_(ignoreOffsetTble) {}
 
-DJPEG2KCodecParameter::DJPEG2KCodecParameter(J2K_UIDCreation uidCreation, J2K_PlanarConfiguration planarConfiguration, OFBool ignoreOffsetTble)
+DcmJp2kCodecParameter::DcmJp2kCodecParameter(J2K_UIDCreation uidCreation, J2K_PlanarConfiguration planarConfiguration, OFBool ignoreOffsetTble)
     : DcmCodecParameter(),
       jp2k_optionsEnabled_(OFFalse),
       jp2k_cblkwidth_(0),
@@ -27,7 +27,7 @@ DJPEG2KCodecParameter::DJPEG2KCodecParameter(J2K_UIDCreation uidCreation, J2K_Pl
       planarConfiguration_(planarConfiguration),
       ignoreOffsetTable_(ignoreOffsetTble) {}
 
-DJPEG2KCodecParameter::DJPEG2KCodecParameter(const DJPEG2KCodecParameter &arg)
+DcmJp2kCodecParameter::DcmJp2kCodecParameter(const DcmJp2kCodecParameter &arg)
     : DcmCodecParameter(arg)
 
       ,
@@ -42,8 +42,8 @@ DJPEG2KCodecParameter::DJPEG2KCodecParameter(const DJPEG2KCodecParameter &arg)
       planarConfiguration_(arg.planarConfiguration_),
       ignoreOffsetTable_(arg.ignoreOffsetTable_) {}
 
-DJPEG2KCodecParameter::~DJPEG2KCodecParameter() {}
+DcmJp2kCodecParameter::~DcmJp2kCodecParameter() {}
 
-DcmCodecParameter *DJPEG2KCodecParameter::clone() const { return new DJPEG2KCodecParameter(*this); }
+DcmCodecParameter *DcmJp2kCodecParameter::clone() const { return new DcmJp2kCodecParameter(*this); }
 
-const char *DJPEG2KCodecParameter::className() const { return "DJPEG2KCodecParameter"; }
+const char *DcmJp2kCodecParameter::className() const { return "DcmJp2kCodecParameter"; }

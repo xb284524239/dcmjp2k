@@ -6,15 +6,15 @@
 
 
 // initialization of static members
-OFBool DCMJP2kDecoderRegistration::registered_ = OFFalse;
-DJPEG2KCodecParameter *DCMJP2kDecoderRegistration::cp_ = NULL;
-DJPEG2KDecoder *DCMJP2kDecoderRegistration::decoder_ = NULL;
+OFBool DcmJp2kDecoderRegistration::registered_ = OFFalse;
+DcmJp2kCodecParameter *DcmJp2kDecoderRegistration::cp_ = NULL;
+DcmJp2kDecoder *DcmJp2kDecoderRegistration::decoder_ = NULL;
 
-void DCMJP2kDecoderRegistration::registerCodecs(J2K_UIDCreation uidcreation, J2K_PlanarConfiguration planarconfig, OFBool ignoreOffsetTable) {
+void DcmJp2kDecoderRegistration::registerCodecs(J2K_UIDCreation uidcreation, J2K_PlanarConfiguration planarconfig, OFBool ignoreOffsetTable) {
     if (!registered_) {
-        cp_ = new DJPEG2KCodecParameter(uidcreation, planarconfig, ignoreOffsetTable);
+        cp_ = new DcmJp2kCodecParameter(uidcreation, planarconfig, ignoreOffsetTable);
         if (cp_) {
-            decoder_ = new DJPEG2KDecoder();
+            decoder_ = new DcmJp2kDecoder();
             if (decoder_) DcmCodecList::registerCodec(decoder_, NULL, cp_);
 
             registered_ = OFTrue;
@@ -22,7 +22,7 @@ void DCMJP2kDecoderRegistration::registerCodecs(J2K_UIDCreation uidcreation, J2K
     }
 }
 
-void DCMJP2kDecoderRegistration::cleanup() {
+void DcmJp2kDecoderRegistration::cleanup() {
     if (registered_) {
         DcmCodecList::deregisterCodec(decoder_);
         delete decoder_;
@@ -36,4 +36,4 @@ void DCMJP2kDecoderRegistration::cleanup() {
     }
 }
 
-OFString DCMJP2kDecoderRegistration::getLibraryVersionString() { return FMJPEG2K_JPEG_VERSION_STRING; }
+OFString DcmJp2kDecoderRegistration::getLibraryVersionString() { return DCMJP2k_LIBRARY_VERSION_STRING; }

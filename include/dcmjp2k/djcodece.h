@@ -5,8 +5,8 @@
 #include "dcmtk/dcmdata/dcofsetl.h" /* for struct DcmOffsetList */
 #include "dcmtk/ofstd/ofstring.h"   /* for class OFString */
 
-class FMJPEG2KRepresentationParameter;
-class DJPEG2KCodecParameter;
+class DcmJp2kRepresentationParameter;
+class DcmJp2kCodecParameter;
 class DicomImage;
 
 /** abstract codec class for JPEG-2000 encoders.
@@ -15,13 +15,13 @@ class DicomImage;
  *  This class only supports compression, it neither implements
  *  decoding nor transcoding.
  */
-class DCMJP2k_EXPORT DJPEG2KEncoderBase : public DcmCodec {
+class DCMJP2K_EXPORT DcmJp2kEncoderBase : public DcmCodec {
    public:
     /// default constructor
-    DJPEG2KEncoderBase();
+    DcmJp2kEncoderBase();
 
     /// destructor
-    virtual ~DJPEG2KEncoderBase();
+    virtual ~DcmJp2kEncoderBase();
 
     /** decompresses the given pixel sequence and
      *  stores the result in the given uncompressedPixelData element.
@@ -201,8 +201,8 @@ class DCMJP2k_EXPORT DJPEG2KEncoderBase : public DcmCodec {
      *  @param compressionRatio compression ratio returned upon success
      *  @return EC_Normal if successful, an error code otherwise.
      */
-    OFCondition losslessRawEncode(const Uint16 *pixelData, const Uint32 length, DcmItem *dataset, const FMJPEG2KRepresentationParameter *djrp, DcmPixelSequence *&pixSeq,
-                                  const DJPEG2KCodecParameter *djcp, double &compressionRatio) const;
+    OFCondition losslessRawEncode(const Uint16 *pixelData, const Uint32 length, DcmItem *dataset, const DcmJp2kRepresentationParameter *djrp, DcmPixelSequence *&pixSeq,
+                                  const DcmJp2kCodecParameter *djcp, double &compressionRatio) const;
 
     /** lossless encoder that moves Overlays to (60xx,3000) and only
      *  compresses the stored bits of the pixel cell.
@@ -217,8 +217,8 @@ class DCMJP2k_EXPORT DJPEG2KEncoderBase : public DcmCodec {
      *  @param nearLosslessDeviation maximum deviation for near-lossless encoding
      *  @return EC_Normal if successful, an error code otherwise.
      */
-    OFCondition RenderedEncode(const Uint16 *pixelData, const Uint32 length, DcmItem *dataset, const FMJPEG2KRepresentationParameter *djrp, DcmPixelSequence *&pixSeq,
-                               const DJPEG2KCodecParameter *djcp, double &compressionRatio) const;
+    OFCondition RenderedEncode(const Uint16 *pixelData, const Uint32 length, DcmItem *dataset, const DcmJp2kRepresentationParameter *djrp, DcmPixelSequence *&pixSeq,
+                               const DcmJp2kCodecParameter *djcp, double &compressionRatio) const;
 
     /** for all overlay groups create (60xx,3000) Overlay Data.
      *  @param dataset dataset to be modified
@@ -244,7 +244,7 @@ class DCMJP2k_EXPORT DJPEG2KEncoderBase : public DcmCodec {
      *    i. e. 30 means a 30:1 lossy compression.
      *  @return EC_Normal if successful, an error code otherwise
      */
-    OFCondition updateDerivationDescription(DcmItem *dataset, const FMJPEG2KRepresentationParameter *djrp, double ratio) const;
+    OFCondition updateDerivationDescription(DcmItem *dataset, const DcmJp2kRepresentationParameter *djrp, double ratio) const;
 
     /** perform the lossless raw compression of a single frame
      *  @param framePointer pointer to start of frame
@@ -262,7 +262,7 @@ class DCMJP2k_EXPORT DJPEG2KEncoderBase : public DcmCodec {
      */
     OFCondition compressRawFrame(const Uint8 *framePointer, Uint16 bitsAllocated, Uint16 columns, Uint16 rows, Uint16 samplesPerPixel, Uint16 planarConfiguration, OFBool pixelRepresentation,
                                  const OFString &photometricInterpretation, DcmPixelSequence *pixelSequence, DcmOffsetList &offsetList, unsigned long &compressedSize,
-                                 const DJPEG2KCodecParameter *djcp) const;
+                                 const DcmJp2kCodecParameter *djcp) const;
 
     /** perform the lossless compression of a single rendered frame
      *  @param pixelSequence object in which the compressed frame is stored
@@ -276,7 +276,7 @@ class DCMJP2k_EXPORT DJPEG2KEncoderBase : public DcmCodec {
      *  @return EC_Normal if successful, an error code otherwise
      */
     OFCondition compressRenderedFrame(DcmPixelSequence *pixelSequence, DicomImage *dimage, const OFString &photometricInterpretation, DcmOffsetList &offsetList, unsigned long &compressedSize,
-                                      const DJPEG2KCodecParameter *djcp, Uint32 frame, const FMJPEG2KRepresentationParameter *djrp) const;
+                                      const DcmJp2kCodecParameter *djcp, Uint32 frame, const DcmJp2kRepresentationParameter *djrp) const;
 
     /** Convert an image from sample interleaved to uninterleaved.
      *  @param target A buffer where the converted image will be stored
@@ -303,7 +303,7 @@ class DCMJP2k_EXPORT DJPEG2KEncoderBase : public DcmCodec {
 
 /** codec class for JPEG-2000 lossless only TS encoding
  */
-class DCMJP2k_EXPORT DJPEG2KLosslessEncoder : public DJPEG2KEncoderBase {
+class DCMJP2K_EXPORT DcmJp2kLosslessEncoder : public DcmJp2kEncoderBase {
     /** returns the transfer syntax that this particular codec
      *  is able to encode
      *  @return supported transfer syntax
@@ -313,7 +313,7 @@ class DCMJP2k_EXPORT DJPEG2KLosslessEncoder : public DJPEG2KEncoderBase {
 
 /** codec class for JPEG-2000 lossy and lossless TS encoding
  */
-class DCMJP2k_EXPORT DJPEG2KNearLosslessEncoder : public DJPEG2KEncoderBase {
+class DCMJP2K_EXPORT DcmJp2kNearLosslessEncoder : public DcmJp2kEncoderBase {
     /** returns the transfer syntax that this particular codec
      *  is able to encode
      *  @return supported transfer syntax

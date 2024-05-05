@@ -5,13 +5,13 @@
 #include "dcmtk/ofstd/oftypes.h" /* for OFBool */
 
 
-class DJPEG2KCodecParameter;
-class DJPEG2KLosslessEncoder;
-class DJPEG2KNearLosslessEncoder;
+class DcmJp2kCodecParameter;
+class DcmJp2kLosslessEncoder;
+class DcmJp2kNearLosslessEncoder;
 
 /** singleton class that registers encoders for all supported JPEG 2000 processes.
  */
-class DCMJP2k_EXPORT DCMJP2KEncoderRegistration {
+class DCMJP2K_EXPORT DcmJp2kEncoderRegistration {
    public:
     /** registers encoders for all supported JPEG 2000 processes.
      *  If already registered, call is ignored unless cleanup() has
@@ -47,11 +47,11 @@ class DCMJP2k_EXPORT DCMJP2KEncoderRegistration {
     static OFBool registered_;
 
     /// pointer to codec parameter shared by all encoders
-    static DJPEG2KCodecParameter *cp_;
+    static DcmJp2kCodecParameter *cp_;
 
     /// pointer to encoder for lossless JPEG 2000
-    static DJPEG2KLosslessEncoder *losslessencoder_;
+    static DcmJp2kLosslessEncoder *losslessencoder_;
 
     /// pointer to encoder for lossy JPEG 2000
-    static DJPEG2KNearLosslessEncoder *nearlosslessencoder_;
+    static DcmJp2kNearLosslessEncoder *nearlosslessencoder_;
 };

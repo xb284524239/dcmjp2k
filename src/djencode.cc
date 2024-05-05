@@ -6,27 +6,27 @@
 
 
 // initialization of static members
-OFBool DCMJP2KEncoderRegistration::registered_ = OFFalse;
-DJPEG2KCodecParameter *DCMJP2KEncoderRegistration::cp_ = NULL;
-DJPEG2KLosslessEncoder *DCMJP2KEncoderRegistration::losslessencoder_ = NULL;
-DJPEG2KNearLosslessEncoder *DCMJP2KEncoderRegistration::nearlosslessencoder_ = NULL;
+OFBool DcmJp2kEncoderRegistration::registered_ = OFFalse;
+DcmJp2kCodecParameter *DcmJp2kEncoderRegistration::cp_ = NULL;
+DcmJp2kLosslessEncoder *DcmJp2kEncoderRegistration::losslessencoder_ = NULL;
+DcmJp2kNearLosslessEncoder *DcmJp2kEncoderRegistration::nearlosslessencoder_ = NULL;
 
-void DCMJP2KEncoderRegistration::registerCodecs(OFBool jp2k_optionsEnabled, Uint16 jp2k_cblkwidth, Uint16 jp2k_cblkheight, OFBool preferCookedEncoding, Uint32 fragmentSize, OFBool createOffsetTable,
+void DcmJp2kEncoderRegistration::registerCodecs(OFBool jp2k_optionsEnabled, Uint16 jp2k_cblkwidth, Uint16 jp2k_cblkheight, OFBool preferCookedEncoding, Uint32 fragmentSize, OFBool createOffsetTable,
                                                 J2K_UIDCreation uidCreation, OFBool convertToSC) {
     if (!registered_) {
-        cp_ = new DJPEG2KCodecParameter(jp2k_optionsEnabled, jp2k_cblkwidth, jp2k_cblkheight, preferCookedEncoding, fragmentSize, createOffsetTable, uidCreation, convertToSC, EJ2KPC_restore, OFFalse);
+        cp_ = new DcmJp2kCodecParameter(jp2k_optionsEnabled, jp2k_cblkwidth, jp2k_cblkheight, preferCookedEncoding, fragmentSize, createOffsetTable, uidCreation, convertToSC, EJ2KPC_restore, OFFalse);
 
         if (cp_) {
-            losslessencoder_ = new DJPEG2KLosslessEncoder();
+            losslessencoder_ = new DcmJp2kLosslessEncoder();
             if (losslessencoder_) DcmCodecList::registerCodec(losslessencoder_, NULL, cp_);
-            nearlosslessencoder_ = new DJPEG2KNearLosslessEncoder();
+            nearlosslessencoder_ = new DcmJp2kNearLosslessEncoder();
             if (nearlosslessencoder_) DcmCodecList::registerCodec(nearlosslessencoder_, NULL, cp_);
             registered_ = OFTrue;
         }
     }
 }
 
-void DCMJP2KEncoderRegistration::cleanup() {
+void DcmJp2kEncoderRegistration::cleanup() {
     if (registered_) {
         DcmCodecList::deregisterCodec(losslessencoder_);
         DcmCodecList::deregisterCodec(nearlosslessencoder_);
@@ -43,4 +43,4 @@ void DCMJP2KEncoderRegistration::cleanup() {
     }
 }
 
-OFString DCMJP2KEncoderRegistration::getLibraryVersionString() { return FMJPEG2K_JPEG_VERSION_STRING; }
+OFString DcmJp2kEncoderRegistration::getLibraryVersionString() { return DCMJP2k_LIBRARY_VERSION_STRING; }

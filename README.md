@@ -11,10 +11,12 @@ An unofficial plugin for DCMTK and implemention JPEG2000 codec via openjpeg.
 
 
 ## Usage
-- Decode 
-    DCMJP2KDecoderRegistration::registerCodecs();
-    DCMJP2KDecoderRegistration::cleanup();
+### Decode
+  
+   1. DcmJp2kDecoderRegistration::registerCodecs();
+   2. DcmJp2kDecoderRegistration::cleanup();
 
-- Encode
-    DCMJP2KEncoderRegistration::registerCodecs();
-    DCMJP2KEncoderRegistration::cleanup();
+### Encode
+ 
+   1. DcmJp2kEncoderRegistration::registerCodecs();
+   2. DcmJp2kEncoderRegistration::cleanup();

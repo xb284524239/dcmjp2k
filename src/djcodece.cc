@@ -37,54 +37,54 @@ BEGIN_EXTERN_C
 #endif
 END_EXTERN_C
 
-E_TransferSyntax DJPEG2KLosslessEncoder::supportedTransferSyntax() const { return EXS_JPEG2000LosslessOnly; }
+E_TransferSyntax DcmJp2kLosslessEncoder::supportedTransferSyntax() const { return EXS_JPEG2000LosslessOnly; }
 
-E_TransferSyntax DJPEG2KNearLosslessEncoder::supportedTransferSyntax() const { return EXS_JPEG2000; }
+E_TransferSyntax DcmJp2kNearLosslessEncoder::supportedTransferSyntax() const { return EXS_JPEG2000; }
 
 // --------------------------------------------------------------------------
 
-DJPEG2KEncoderBase::DJPEG2KEncoderBase() : DcmCodec() {}
+DcmJp2kEncoderBase::DcmJp2kEncoderBase() : DcmCodec() {}
 
-DJPEG2KEncoderBase::~DJPEG2KEncoderBase() {}
+DcmJp2kEncoderBase::~DcmJp2kEncoderBase() {}
 
-OFBool DJPEG2KEncoderBase::canChangeCoding(const E_TransferSyntax oldRepType, const E_TransferSyntax newRepType) const {
+OFBool DcmJp2kEncoderBase::canChangeCoding(const E_TransferSyntax oldRepType, const E_TransferSyntax newRepType) const {
     // this codec only handles conversion from uncompressed to JPEG 2000.
     DcmXfer oldRep(oldRepType);
     return (oldRep.isNotEncapsulated() && (newRepType == supportedTransferSyntax()));
 }
 
-OFCondition DJPEG2KEncoderBase::decode(const DcmRepresentationParameter * /* fromRepParam */, DcmPixelSequence * /* pixSeq */, DcmPolymorphOBOW & /* uncompressedPixelData */,
+OFCondition DcmJp2kEncoderBase::decode(const DcmRepresentationParameter * /* fromRepParam */, DcmPixelSequence * /* pixSeq */, DcmPolymorphOBOW & /* uncompressedPixelData */,
                                        const DcmCodecParameter * /* cp */, const DcmStack & /* objStack */) const {
     // we are an encoder only
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KEncoderBase::decode(const DcmRepresentationParameter *fromRepParam, DcmPixelSequence *pixSeq, DcmPolymorphOBOW &uncompressedPixelData, const DcmCodecParameter *cp,
+OFCondition DcmJp2kEncoderBase::decode(const DcmRepresentationParameter *fromRepParam, DcmPixelSequence *pixSeq, DcmPolymorphOBOW &uncompressedPixelData, const DcmCodecParameter *cp,
                                        const DcmStack &objStack, OFBool &removeOldRep) const {
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KEncoderBase::decodeFrame(const DcmRepresentationParameter * /* fromParam */, DcmPixelSequence * /* fromPixSeq */, const DcmCodecParameter * /* cp */, DcmItem * /* dataset */,
+OFCondition DcmJp2kEncoderBase::decodeFrame(const DcmRepresentationParameter * /* fromParam */, DcmPixelSequence * /* fromPixSeq */, const DcmCodecParameter * /* cp */, DcmItem * /* dataset */,
                                             Uint32 /* frameNo */, Uint32 & /* startFragment */, void * /* buffer */, Uint32 /* bufSize */, OFString & /* decompressedColorModel */) const {
     // we are an encoder only
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KEncoderBase::encode(const E_TransferSyntax /* fromRepType */, const DcmRepresentationParameter * /* fromRepParam */, DcmPixelSequence * /* fromPixSeq */,
+OFCondition DcmJp2kEncoderBase::encode(const E_TransferSyntax /* fromRepType */, const DcmRepresentationParameter * /* fromRepParam */, DcmPixelSequence * /* fromPixSeq */,
                                        const DcmRepresentationParameter * /* toRepParam */, DcmPixelSequence *& /* toPixSeq */, const DcmCodecParameter * /* cp */, DcmStack & /* objStack */) const {
     // we don't support re-coding for now.
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KEncoderBase::encode(const E_TransferSyntax fromRepType, const DcmRepresentationParameter *fromRepParam, DcmPixelSequence *fromPixSeq, const DcmRepresentationParameter *toRepParam,
+OFCondition DcmJp2kEncoderBase::encode(const E_TransferSyntax fromRepType, const DcmRepresentationParameter *fromRepParam, DcmPixelSequence *fromPixSeq, const DcmRepresentationParameter *toRepParam,
                                        DcmPixelSequence *&toPixSeq, const DcmCodecParameter *cp, DcmStack &objStack, OFBool &removeOldRep) const {
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KEncoderBase::encode(const Uint16 *pixelData, const Uint32 length, const DcmRepresentationParameter *toRepParam, DcmPixelSequence *&pixSeq, const DcmCodecParameter *cp,
+OFCondition DcmJp2kEncoderBase::encode(const Uint16 *pixelData, const Uint32 length, const DcmRepresentationParameter *toRepParam, DcmPixelSequence *&pixSeq, const DcmCodecParameter *cp,
                                        DcmStack &objStack) const {
     OFCondition result = EC_Normal;
-    FMJPEG2KRepresentationParameter defRep;
+    DcmJp2kRepresentationParameter defRep;
 
     // retrieve pointer to dataset from parameter stack
     DcmStack localStack(objStack);
@@ -94,8 +94,8 @@ OFCondition DJPEG2KEncoderBase::encode(const Uint16 *pixelData, const Uint32 len
     DcmItem *dataset = OFstatic_cast(DcmItem *, dobject);
 
     // assume we can cast the codec and representation parameters to what we need
-    const DJPEG2KCodecParameter *djcp = OFreinterpret_cast(const DJPEG2KCodecParameter *, cp);
-    const FMJPEG2KRepresentationParameter *djrp = OFreinterpret_cast(const FMJPEG2KRepresentationParameter *, toRepParam);
+    const DcmJp2kCodecParameter *djcp = OFreinterpret_cast(const DcmJp2kCodecParameter *, cp);
+    const DcmJp2kRepresentationParameter *djrp = OFreinterpret_cast(const DcmJp2kRepresentationParameter *, toRepParam);
     double compressionRatio = 0.0;
 
     if (!djrp) djrp = &defRep;
@@ -144,18 +144,18 @@ OFCondition DJPEG2KEncoderBase::encode(const Uint16 *pixelData, const Uint32 len
     return result;
 }
 
-OFCondition DJPEG2KEncoderBase::encode(const Uint16 *pixelData, const Uint32 length, const DcmRepresentationParameter *toRepParam, DcmPixelSequence *&pixSeq, const DcmCodecParameter *cp,
+OFCondition DcmJp2kEncoderBase::encode(const Uint16 *pixelData, const Uint32 length, const DcmRepresentationParameter *toRepParam, DcmPixelSequence *&pixSeq, const DcmCodecParameter *cp,
                                        DcmStack &objStack, OFBool &removeOldRep) const {
     // removeOldRep is left as it is, pixel data in original DICOM dataset is not modified
     return encode(pixelData, length, toRepParam, pixSeq, cp, objStack);
 }
 
-OFCondition DJPEG2KEncoderBase::determineDecompressedColorModel(const DcmRepresentationParameter * /* fromParam */, DcmPixelSequence * /* fromPixSeq */, const DcmCodecParameter * /* cp */,
+OFCondition DcmJp2kEncoderBase::determineDecompressedColorModel(const DcmRepresentationParameter * /* fromParam */, DcmPixelSequence * /* fromPixSeq */, const DcmCodecParameter * /* cp */,
                                                                 DcmItem * /* dataset */, OFString & /* decompressedColorModel */) const {
     return EC_IllegalCall;
 }
 
-OFCondition DJPEG2KEncoderBase::adjustOverlays(DcmItem *dataset, DicomImage &image) const {
+OFCondition DcmJp2kEncoderBase::adjustOverlays(DcmItem *dataset, DicomImage &image) const {
     if (dataset == NULL) return EC_IllegalCall;
 
     unsigned int overlayCount = image.getOverlayCount();
@@ -205,7 +205,7 @@ OFCondition DJPEG2KEncoderBase::adjustOverlays(DcmItem *dataset, DicomImage &ima
     return EC_Normal;
 }
 
-OFCondition DJPEG2KEncoderBase::updateLossyCompressionRatio(DcmItem *dataset, double ratio) const {
+OFCondition DcmJp2kEncoderBase::updateLossyCompressionRatio(DcmItem *dataset, double ratio) const {
     if (dataset == NULL) return EC_IllegalCall;
 
     // set Lossy Image Compression to "01" (see DICOM part 3, C.7.6.1.1.5)
@@ -256,7 +256,7 @@ OFCondition DJPEG2KEncoderBase::updateLossyCompressionRatio(DcmItem *dataset, do
     return dataset->putAndInsertString(DCM_LossyImageCompressionMethod, m.c_str());
 }
 
-OFCondition DJPEG2KEncoderBase::updateDerivationDescription(DcmItem *dataset, const FMJPEG2KRepresentationParameter *djrp, double ratio) const {
+OFCondition DcmJp2kEncoderBase::updateDerivationDescription(DcmItem *dataset, const DcmJp2kRepresentationParameter *djrp, double ratio) const {
     OFString derivationDescription;
     char buf[64];
 
@@ -284,8 +284,8 @@ OFCondition DJPEG2KEncoderBase::updateDerivationDescription(DcmItem *dataset, co
     return result;
 }
 
-OFCondition DJPEG2KEncoderBase::losslessRawEncode(const Uint16 *pixelData, const Uint32 length, DcmItem *dataset, const FMJPEG2KRepresentationParameter *djrp, DcmPixelSequence *&pixSeq,
-                                                  const DJPEG2KCodecParameter *djcp, double &compressionRatio) const {
+OFCondition DcmJp2kEncoderBase::losslessRawEncode(const Uint16 *pixelData, const Uint32 length, DcmItem *dataset, const DcmJp2kRepresentationParameter *djrp, DcmPixelSequence *&pixSeq,
+                                                  const DcmJp2kCodecParameter *djcp, double &compressionRatio) const {
     compressionRatio = 0.0;  // initialize if something goes wrong
 
     // determine image properties
@@ -382,7 +382,7 @@ OFCondition DJPEG2KEncoderBase::losslessRawEncode(const Uint16 *pixelData, const
 
         for (unsigned long i = 0; (i < frameCount) && (result.good()); ++i) {
             // compress frame
-            FMJPEG2K_DEBUG("JPEG-2000 encoder processes frame " << (i + 1) << " of " << frameCount);
+            DCMJP2K_DEBUG("JPEG-2000 encoder processes frame " << (i + 1) << " of " << frameCount);
             result = compressRawFrame(framePointer, bitsAllocated, columns, rows, samplesPerPixel, planarConfiguration, pixelRepresentation, photometricInterpretation, pixelSequence, offsetList,
                                       compressedFrameSize, djcp);
 
@@ -419,9 +419,9 @@ OFCondition frametoimage(const Uint8 *framePointer, int planarConfiguration, OFS
 opj_image_t *frameToImage2(const Uint8 *framePointer, int width, int height, opj_cparameters_t *parameters);
 opj_image_t *frameToImage3(const Uint8 *framePointer, int width, int height, opj_cparameters_t *parameters);
 
-OFCondition DJPEG2KEncoderBase::compressRawFrame(const Uint8 *framePointer, Uint16 bitsAllocated, Uint16 width, Uint16 height, Uint16 samplesPerPixel, Uint16 planarConfiguration,
+OFCondition DcmJp2kEncoderBase::compressRawFrame(const Uint8 *framePointer, Uint16 bitsAllocated, Uint16 width, Uint16 height, Uint16 samplesPerPixel, Uint16 planarConfiguration,
                                                  OFBool pixelRepresentation, const OFString &photometricInterpretation, DcmPixelSequence *pixelSequence, DcmOffsetList &offsetList,
-                                                 unsigned long &compressedSize, const DJPEG2KCodecParameter *djcp) const {
+                                                 unsigned long &compressedSize, const DcmJp2kCodecParameter *djcp) const {
     OFCondition result = EC_Normal;
     Uint16 bytesAllocated = bitsAllocated / 8;
     Uint32 frameSize = width * height * bytesAllocated * samplesPerPixel;
@@ -511,8 +511,8 @@ OFCondition DJPEG2KEncoderBase::compressRawFrame(const Uint8 *framePointer, Uint
     return result;
 }
 
-OFCondition DJPEG2KEncoderBase::RenderedEncode(const Uint16 *pixelData, const Uint32 length, DcmItem *dataset, const FMJPEG2KRepresentationParameter *djrp, DcmPixelSequence *&pixSeq,
-                                               const DJPEG2KCodecParameter *djcp, double &compressionRatio) const {
+OFCondition DcmJp2kEncoderBase::RenderedEncode(const Uint16 *pixelData, const Uint32 length, DcmItem *dataset, const DcmJp2kRepresentationParameter *djrp, DcmPixelSequence *&pixSeq,
+                                               const DcmJp2kCodecParameter *djcp, double &compressionRatio) const {
     compressionRatio = 0.0;  // initialize if something goes wrong
 
     // determine a few image properties
@@ -589,7 +589,7 @@ OFCondition DJPEG2KEncoderBase::RenderedEncode(const Uint16 *pixelData, const Ui
 
         for (unsigned long i = 0; (i < frameCount) && (result.good()); ++i) {
             // compress frame
-            FMJPEG2K_DEBUG("JPEG-2000 encoder processes frame " << (i + 1) << " of " << frameCount);
+            DCMJP2K_DEBUG("JPEG-2000 encoder processes frame " << (i + 1) << " of " << frameCount);
             result = compressRenderedFrame(pixelSequence, dimage, photometricInterpretation, offsetList, compressedFrameSize, djcp, i, djrp);
 
             compressedSize += compressedFrameSize;
@@ -625,8 +625,8 @@ OFCondition DJPEG2KEncoderBase::RenderedEncode(const Uint16 *pixelData, const Ui
     return result;
 }
 
-OFCondition DJPEG2KEncoderBase::compressRenderedFrame(DcmPixelSequence *pixelSequence, DicomImage *dimage, const OFString &photometricInterpretation, DcmOffsetList &offsetList,
-                                                      unsigned long &compressedSize, const DJPEG2KCodecParameter *djcp, Uint32 frame, const FMJPEG2KRepresentationParameter *djrp) const {
+OFCondition DcmJp2kEncoderBase::compressRenderedFrame(DcmPixelSequence *pixelSequence, DicomImage *dimage, const OFString &photometricInterpretation, DcmOffsetList &offsetList,
+                                                      unsigned long &compressedSize, const DcmJp2kCodecParameter *djcp, Uint32 frame, const DcmJp2kRepresentationParameter *djrp) const {
     if (dimage == NULL) return EC_IllegalCall;
 
     // access essential image parameters
@@ -849,7 +849,7 @@ OFCondition DJPEG2KEncoderBase::compressRenderedFrame(DcmPixelSequence *pixelSeq
     return result;
 }
 
-OFCondition DJPEG2KEncoderBase::convertToUninterleaved(Uint8 *target, const Uint8 *source, Uint16 components, Uint32 width, Uint32 height, Uint16 bitsAllocated) const {
+OFCondition DcmJp2kEncoderBase::convertToUninterleaved(Uint8 *target, const Uint8 *source, Uint16 components, Uint32 width, Uint32 height, Uint16 bitsAllocated) const {
     Uint8 bytesAllocated = bitsAllocated / 8;
     Uint32 planeSize = width * height * bytesAllocated;
 

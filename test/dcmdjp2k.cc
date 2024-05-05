@@ -8,7 +8,6 @@
 
 #include "dcmtk/ofstd/ofstdinc.h"
 
-
 #ifdef HAVE_GUSI_H
 #include <GUSI.h>
 #endif
@@ -19,7 +18,6 @@
 #include "dcmtk/dcmdata/dcuid.h" /* for dcmtk version name */
 #include "dcmtk/ofstd/ofconapp.h"
 
-
 #ifdef USE_LICENSE_FILE
 #include "oflice.h"
 #endif
@@ -28,7 +26,7 @@
 #define OFFIS_CONSOLE_APPLICATION "dcmdjp2k"
 #endif
 
-static OFLogger dcmdjplsLogger = OFLog::getLogger("dcmtk.apps." OFFIS_CONSOLE_APPLICATION);
+static OFLogger dcmjp2kDecodeLogger = OFLog::getLogger("dcmtk.apps." OFFIS_CONSOLE_APPLICATION);
 
 static char rcsid[] = "$dcmtk: " OFFIS_CONSOLE_APPLICATION " v" OFFIS_DCMTK_VERSION " " OFFIS_DCMTK_RELEASEDATE " $";
 
@@ -131,7 +129,7 @@ int main(int argc, char *argv[]) {
             if (cmd.findOption("--version")) {
                 app.printHeader(OFTrue /*print host identifier*/);
                 COUT << OFendl << "External libraries used:" << OFendl;
-                COUT << "- " << DCMJP2KDecoderRegistration::getLibraryVersionString() << OFendl;
+                COUT << "- " << DcmJp2kDecoderRegistration::getLibraryVersionString() << OFendl;
                 return 0;
             }
         }
@@ -224,52 +222,52 @@ int main(int argc, char *argv[]) {
     }
 
     /* print resource identifier */
-    OFLOG_DEBUG(dcmdjplsLogger, rcsid << OFendl);
+    OFLOG_DEBUG(dcmjp2kDecodeLogger, rcsid << OFendl);
 
     // register global decompression codecs
-    DCMJP2KDecoderRegistration::registerCodecs(opt_uidcreation, opt_planarconfig, opt_ignoreOffsetTable);
+    DcmJp2kDecoderRegistration::registerCodecs(opt_uidcreation, opt_planarconfig, opt_ignoreOffsetTable);
 
     /* make sure data dictionary is loaded */
     if (!dcmDataDict.isDictionaryLoaded()) {
-        OFLOG_WARN(dcmdjplsLogger, "no data dictionary loaded, " << "check environment variable: " << DCM_DICT_ENVIRONMENT_VARIABLE);
+        OFLOG_WARN(dcmjp2kDecodeLogger, "no data dictionary loaded, " << "check environment variable: " << DCM_DICT_ENVIRONMENT_VARIABLE);
     }
 
     // open input file
     if ((opt_ifname == NULL) || (strlen(opt_ifname) == 0)) {
-        OFLOG_FATAL(dcmdjplsLogger, "invalid filename: <empty string>");
+        OFLOG_FATAL(dcmjp2kDecodeLogger, "invalid filename: <empty string>");
         return 1;
     }
 
     DcmFileFormat fileformat;
 
-    OFLOG_INFO(dcmdjplsLogger, "reading input file " << opt_ifname);
+    OFLOG_INFO(dcmjp2kDecodeLogger, "reading input file " << opt_ifname);
 
     OFCondition error = fileformat.loadFile(opt_ifname, opt_ixfer, EGL_noChange, DCM_MaxReadLength, opt_readMode);
     if (error.bad()) {
-        OFLOG_FATAL(dcmdjplsLogger, error.text() << ": reading file: " << opt_ifname);
+        OFLOG_FATAL(dcmjp2kDecodeLogger, error.text() << ": reading file: " << opt_ifname);
         return 1;
     }
 
     DcmDataset *dataset = fileformat.getDataset();
 
-    OFLOG_INFO(dcmdjplsLogger, "decompressing file");
+    OFLOG_INFO(dcmjp2kDecodeLogger, "decompressing file");
 
     DcmXfer opt_oxferSyn(opt_oxfer);
     DcmXfer original_xfer(dataset->getOriginalXfer());
 
     error = dataset->chooseRepresentation(opt_oxfer, NULL);
     if (error.bad()) {
-        OFLOG_FATAL(dcmdjplsLogger, error.text() << ": decompressing file: " << opt_ifname);
-        if (error == EC_CannotChangeRepresentation) OFLOG_FATAL(dcmdjplsLogger, "Input transfer syntax " << original_xfer.getXferName() << " not supported");
+        OFLOG_FATAL(dcmjp2kDecodeLogger, error.text() << ": decompressing file: " << opt_ifname);
+        if (error == EC_CannotChangeRepresentation) OFLOG_FATAL(dcmjp2kDecodeLogger, "Input transfer syntax " << original_xfer.getXferName() << " not supported");
         return 1;
     }
 
     if (!dataset->canWriteXfer(opt_oxfer)) {
-        OFLOG_FATAL(dcmdjplsLogger, "no conversion to transfer syntax " << opt_oxferSyn.getXferName() << " possible");
+        OFLOG_FATAL(dcmjp2kDecodeLogger, "no conversion to transfer syntax " << opt_oxferSyn.getXferName() << " possible");
         return 1;
     }
 
-    OFLOG_INFO(dcmdjplsLogger, "creating output file " << opt_ofname);
+    OFLOG_INFO(dcmjp2kDecodeLogger, "creating output file " << opt_ofname);
 
     // update file meta information with new SOP Instance UID
     if (opt_uidcreation && (opt_writeMode == EWM_fileformat)) opt_writeMode = EWM_updateMeta;
@@ -278,14 +276,14 @@ int main(int argc, char *argv[]) {
     error = fileformat.saveFile(opt_ofname, opt_oxfer, opt_oenctype, opt_oglenc, opt_opadenc, OFstatic_cast(Uint32, opt_filepad), OFstatic_cast(Uint32, opt_itempad), opt_writeMode);
 
     if (error != EC_Normal) {
-        OFLOG_FATAL(dcmdjplsLogger, error.text() << ": writing file: " << opt_ofname);
+        OFLOG_FATAL(dcmjp2kDecodeLogger, error.text() << ": writing file: " << opt_ofname);
         return 1;
     }
 
-    OFLOG_INFO(dcmdjplsLogger, "conversion successful");
+    OFLOG_INFO(dcmjp2kDecodeLogger, "conversion successful");
 
     // deregister global decompression codecs
-    DCMJP2KDecoderRegistration::cleanup();
+    DcmJp2kDecoderRegistration::cleanup();
 
     return 0;
 }

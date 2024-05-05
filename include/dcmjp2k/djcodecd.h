@@ -5,7 +5,7 @@
 #include "dcmtk/ofstd/ofstring.h"
 
 /* forward declaration */
-class DJPEG2KCodecParameter;
+class DcmJp2kCodecParameter;
 
 /** abstract codec class for JPEG-2000 decoders.
  *  This abstract class contains most of the application logic
@@ -13,13 +13,13 @@ class DJPEG2KCodecParameter;
  *  This class only supports decompression, it neither implements
  *  encoding nor transcoding.
  */
-class DCMJP2k_EXPORT DJPEG2KDecoderBase : public DcmCodec {
+class DCMJP2K_EXPORT DcmJp2kDecoderBase : public DcmCodec {
    public:
     /// default constructor
-    DJPEG2KDecoderBase();
+    DcmJp2kDecoderBase();
 
     /// destructor
-    virtual ~DJPEG2KDecoderBase();
+    virtual ~DcmJp2kDecoderBase();
 
     /** decompresses the given pixel sequence and
      *  stores the result in the given uncompressedPixelData element.
@@ -208,7 +208,7 @@ class DCMJP2k_EXPORT DJPEG2KDecoderBase : public DcmCodec {
      *  @param bytesPerSample number of bytes per sample
      *  @return EC_Normal if successful, an error code otherwise.
      */
-    static OFCondition decodeFrame(DcmPixelSequence *fromPixSeq, const DJPEG2KCodecParameter *cp, DcmItem *dataset, Uint32 frameNo, Uint32 &startFragment, void *buffer, Uint32 bufSize,
+    static OFCondition decodeFrame(DcmPixelSequence *fromPixSeq, const DcmJp2kCodecParameter *cp, DcmItem *dataset, Uint32 frameNo, Uint32 &startFragment, void *buffer, Uint32 bufSize,
                                    Sint32 imageFrames, Uint16 imageColumns, Uint16 imageRows, Uint16 imageSamplesPerPixel, Uint16 bytesPerSample);
 
     /** determines if a given image requires color-by-plane planar configuration
@@ -286,4 +286,4 @@ class DCMJP2k_EXPORT DJPEG2KDecoderBase : public DcmCodec {
 
 /** codec class for JPEG-2000 lossy and lossless TS decoding
  */
-class DCMJP2k_EXPORT DJPEG2KDecoder : public DJPEG2KDecoderBase {};
+class DCMJP2K_EXPORT DcmJp2kDecoder : public DcmJp2kDecoderBase {};
