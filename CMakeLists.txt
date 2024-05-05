@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(WIN32)
-  string(APPEND CMAKE_CXX_FLAGS " /utf-8 /Zc:__cplusplus") # 1.指定 msvc 使用 utf8 编码；2.让 msvc 能够正确设置 __cplusplus 的值: 20170301
+  	string(APPEND CMAKE_CXX_FLAGS " /utf-8 /Zc:__cplusplus") # 1.指定 msvc 使用 utf8 编码；2.让 msvc 能够正确设置 __cplusplus 的值: 20170301
 endif()
 
 set(file_head
@@ -46,17 +46,17 @@ target_link_libraries(${PROJECT_NAME} PRIVATE openjp2)
 # DCMTK lib
 find_package(DCMTK CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE DCMTK::DCMTK)
- if ("${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" STREQUAL "/")
-     message(WARNING "No vcpkg install dir found, DCMTK definitions are not set")
- else()
-     target_compile_definitions(${PROJECT_NAME}
-         PRIVATE
-             "DCMTK_PREFIX=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
-             "DCM_DICT_DEFAULT_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/dicom.dic:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/private.dic"
-             "DEFAULT_CONFIGURATION_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/etc/dcmtk-${DCMTK_VERSION}/"
-             "DEFAULT_SUPPORT_DATA_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/"
-     )
- endif()
+if ("${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" STREQUAL "/")
+	message(WARNING "No vcpkg install dir found, DCMTK definitions are not set")
+else()
+	target_compile_definitions(${PROJECT_NAME}
+		PRIVATE
+			"DCMTK_PREFIX=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}"
+			"DCM_DICT_DEFAULT_PATH=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/dicom.dic:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/private.dic"
+			"DEFAULT_CONFIGURATION_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/etc/dcmtk-${DCMTK_VERSION}/"
+			"DEFAULT_SUPPORT_DATA_DIR=${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/dcmtk-${DCMTK_VERSION}/"
+	)
+endif()
 
 # ADD_EXECUTABLE(dcmcjp2k test/dcmcjp2k.cc)
 # TARGET_LINK_LIBRARIES(dcmcjp2k PRIVATE ${PROJECT_NAME})
